@@ -12,7 +12,6 @@
 }
 
 input[type="file"]{
-    color: transparent;    /* Hides your "No File Selected" */
     direction: rtl;        /* Sets the Control to Right-To-Left */
 }
 .col1{

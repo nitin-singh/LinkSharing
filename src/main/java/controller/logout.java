@@ -14,13 +14,9 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class logout {
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public ModelAndView forgotpass(HttpServletRequest request, HttpSession session) {
-        ModelAndView model = new ModelAndView();
+    public String logout(HttpServletRequest request, HttpSession session) {
         session  = request.getSession(false);
         session.invalidate();
-        model.setViewName("logout");
-
-        return model;
-
+        return ("redirect:/");
     }
 }

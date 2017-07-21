@@ -67,7 +67,7 @@ public class User {
 
 
 
-     public Date getDatecreated() {
+    public Date getDatecreated() {
         return datecreated;
     }
 
@@ -97,12 +97,12 @@ public class User {
 
     public void setPhoto(MultipartFile photo) {
 
-            try{
-                this.photo = photo.getBytes();
-            }
-            catch(Exception e){
+        try{
+            this.photo = photo.getBytes();
+        }
+        catch(Exception e){
             e.printStackTrace();
-            }
+        }
 
 
     }

@@ -11,7 +11,7 @@ public class Subscription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-        private int subID;
+    private int subID;
 
     private Date dateCreated;
     @ManyToOne

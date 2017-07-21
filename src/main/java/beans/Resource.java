@@ -10,14 +10,14 @@ import java.sql.Date;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS )
 abstract class Resource {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.SEQUENCE)
-        private int rId;
-        private String description;
-        // private User createdBy ;
-        //private Topic topic;
-        private Date dateCreated;
-        private Date lastupdated;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private int rId;
+    private String description;
+    // private User createdBy ;
+    //private Topic topic;
+    private Date dateCreated;
+    private Date lastupdated;
 
     public int getrId() {
         return rId;
@@ -36,17 +36,17 @@ abstract class Resource {
     }
 
     @ManyToOne
-        private User user;
-        @ManyToOne
-        private Topic topic;
+    private User user;
+    @ManyToOne
+    private Topic topic;
 
-     public String getDescription() {
-            return description;
-        }
+    public String getDescription() {
+        return description;
+    }
 
-        public void setDescription(String description) {
-            this.description = description;
-        }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
 
 
@@ -58,22 +58,22 @@ abstract class Resource {
         this.topic = topic;
     }
 
-        public Date getDateCreated() {
-            return dateCreated;
-        }
-
-        public void setDateCreated(Date dateCreated) {
-            this.dateCreated = dateCreated;
-        }
-
-        public Date getLastupdated() {
-            return lastupdated;
-        }
-
-        public void setLastupdated(Date lastupdated) {
-            this.lastupdated = lastupdated;
-        }
-
-
-
+    public Date getDateCreated() {
+        return dateCreated;
     }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Date getLastupdated() {
+        return lastupdated;
+    }
+
+    public void setLastupdated(Date lastupdated) {
+        this.lastupdated = lastupdated;
+    }
+
+
+
+}

@@ -126,7 +126,7 @@ return list;
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        Query query = session.createQuery("Select tid from Topic where topicname=?");
+        Query query = session.createQuery("Select tId from Topic where topicname=?");
         query.setParameter(0,topic);
         List list = query.getResultList();
 //        System.out.println("list= "+list.get(0));

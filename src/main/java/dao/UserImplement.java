@@ -119,7 +119,7 @@ public class UserImplement implements UserDao {
 
            session.beginTransaction();
            //System.out.println(Password);
-           Query query = session.createQuery("select password_ from User c where username=? OR email=?");
+           Query query = session.createQuery("select password_ from User  where username=? OR email=?");
            query.setParameter(0,Username);
            query.setParameter(1,Username);
            List list = query.getResultList();
@@ -143,7 +143,7 @@ public class UserImplement implements UserDao {
            boolean userFound = false;
            session.beginTransaction();
            //System.out.println(Password);
-           Query query = session.createQuery("from User c where email=? OR username=?");
+           Query query = session.createQuery("from User where email=? OR username=?");
            query.setParameter(0,email);
            query.setParameter(1,username);
            List<User> beans = null;
@@ -166,7 +166,7 @@ public class UserImplement implements UserDao {
 //            String msg="Email does not exists";
             session.beginTransaction();
             //System.out.println(Password);
-            Query query = session.createQuery("from User c where email=?");
+            Query query = session.createQuery("from User where email=?");
             query.setParameter(0,email);
             List list = query.getResultList();
 
@@ -183,7 +183,7 @@ public String getid(String email){
     String pass=null;
     Session session = sessionFactory.openSession();
     session.beginTransaction();
-    Query query = session.createQuery("select forgotpassid from User c where email=?");
+    Query query = session.createQuery("select forgotpassid from User where email=?");
     query.setParameter(0,email);
     List rows = query.getResultList();
     pass=rows.get(0).toString();
@@ -294,7 +294,7 @@ public String getid(String email){
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         System.out.println("hello count 1");
-        Query query = session.createQuery("Select count(subId) from Subscription where user_userid=?");
+        Query query = session.createQuery("Select count(subID) from Subscription where user_userid=?");
         query.setParameter(0,userid.getUserid());
         long count=(Long)query.getResultList().get(0);
         session.getTransaction().commit();

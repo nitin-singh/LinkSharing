@@ -61,9 +61,7 @@ public class Topic {
     public User getUser() {
         return user;
     }
-
     public void setUser(User user) {
-
         this.user = user;
     }*/
 
@@ -82,16 +80,13 @@ public class Topic {
     public User getUser() {
         return user;
     }
-
     public void setUser(User user) {
-
         this.user = user;
     }*/
 
    /* public User getCreatedBy() {
         return createdBy;
     }
-
     public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
     }*/

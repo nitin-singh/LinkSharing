@@ -32,11 +32,13 @@
                data: "name=" + name + "&visibility=" + visibility,
                success: function (response) {
                    // we have the response
-                   console.log('hello');
+                   alert("Topic Inserted Successfully");
+                   $('#CreateTopic').modal('hide');
                },
-               error: function ( xhr, status, error) {
-                   console.log( " xhr.responseText: " + xhr.responseText + " //status: " + status + " //Error: "+error );
-
+               error: function (e) {
+                 //  console.log( " xhr.responseText: " + xhr.responseText + " //status: " + status + " //Error: "+error );
+                   alert("ERROR");
+                   $('#CreateTopic').modal('hide');
                }
            });
 
@@ -54,10 +56,12 @@
                data: "email=" + email+ "&topic=" + topic,
                success: function (response) {
                    // we have the response
-                   alert('hello');
+                   alert("Invite Sent Successfully");
+                   $('#SendInvite').modal('hide');
                },
                error: function (e) {
-                   alert('Error: ' + e);
+                   alert("Error");
+                   $('#SendInvite').modal('hide');
                }
            });
        });
@@ -78,10 +82,12 @@
 
                    success: function (response) {
                        // we have the response
-                       alert('hello');
+                       alert('Document Shared Successfully');
+                       $('#shareDocument').modal('hide');
                    },
                    error: function (e) {
-                       alert('Error: ' + e);
+                       alert("Error");
+                       $('#shareDocument').modal('hide');
                    }
                });
 
@@ -103,10 +109,12 @@
                 cache:false,
                success: function (response) {
                    // we have the response
-                   alert('hello');
+                   alert("Link Shared Successfully");
+                   $('#shareLink').modal('hide');
                },
                error: function (e) {
-                   alert('Error: ' + e);
+                   alert("Error");
+                   $('#shareLink').modal('hide');
                }
            });
 

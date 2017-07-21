@@ -37,19 +37,8 @@ public class StartupEventListener {
 
     @EventListener(ContextRefreshedEvent.class)
     public void ContextRefreshedEvent(final ContextRefreshedEvent event) {
-
-
        checkAdmin();
-
-
-/*
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        System.out.println("Context Refreshed");
-        sampleEvent.setEventFired(true);
-    }
-    */
-    }
+ }
     public void checkAdmin(){
         Session session = sessionFactory.openSession();
         //  boolean emailFound=checkEmail(email);

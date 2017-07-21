@@ -40,17 +40,17 @@ public class homeController {
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public ModelAndView registration(HttpServletRequest request, HttpServletResponse response, @ModelAttribute("user") User user) {
-        ModelAndView model = new ModelAndView();
+    public String registration(HttpServletRequest request, HttpServletResponse response, @ModelAttribute("user") User user) {
+        System.out.println("in reg");
         String valid= userImplement.addUser(user);
         if(valid.equals("Not Valid")){
-            model.addObject("msg","Already Exists Username or Email");
-            model.setViewName("home");
+            request.setAttribute("msg","Already Exists Username or Email");
+            return ("redirect:/");
         }
         else{
-            model.setViewName("success");
+            request.setAttribute("msg","Registered Successfully!! Please LogIn");
+            return ("redirect:/");
         }
-        return model;
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -68,15 +68,6 @@ public class homeController {
 //            model.setViewName("dashboard");
             //List userData=userImplement.getUserData(Username);
             //System.out.println(userData.get(0));
-            User userData=userImplement.getUserData(Username);
-            long sub= userImplement.countSubscription(user);
-            long topic= userImplement.countTopic(user);
-            System.out.println("dash"+topic);
-            request.getSession(true).setAttribute("userData",userData);
-            request.getSession(true).setAttribute("subscription",sub);
-            request.getSession(true).setAttribute("topics",topic);
-            List<Subscription> displaySub = userImplement.subscriptionDisplay(user);
-            request.getSession(true).setAttribute("displaySub",displaySub);
             return ("redirect:/dashboard");
         } else {
 

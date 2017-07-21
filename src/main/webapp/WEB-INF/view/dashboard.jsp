@@ -1,6 +1,9 @@
 <%@ page import="beans.User" %>
 <%@ page import="java.util.List" %>
-<%@ page import="beans.Subscription" %><%--
+<%@ page import="beans.Subscription" %>
+<%@ page import="beans.Seriousness" %>
+<%@ page import="beans.Visibility" %>
+<%@ page import="java.util.Base64" %><%--
   Created by IntelliJ IDEA.
   User: Prashant
   Date: 16-Jul-17
@@ -16,6 +19,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <spring:url value="resources/css/dashboard.css" var="dashboardCss" />
+
     <link href="${dashboardCss}" rel="stylesheet" />
 
 
@@ -28,7 +32,7 @@
             <a class="head-icon" style="float: left; margin-top: 13px;">LINK
                 SHARING</a>
         </div>
-<a href="/logout" method="post">Logout</a>
+        <a href="/logout" method="post">Logout</a>
         <div class="col-lg-offset-3 col-lg-5">
             <div class="row">
                 <div class="col-lg-6 search">
@@ -63,7 +67,8 @@
             <div class="col-lg-2">
                 <button class="btn-xs drop_button dropdown-toggle head-btn"
                         data-placement="left" data-toggle="dropdown">
-                    Uday <span class="caret"></span>
+                    <%User u1= (User)request.getSession(true).getAttribute("userData");%>
+                    <%=u1.getUsername()%> <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu user-ul">
                     <li><a href="#">Profile</a></li>
@@ -83,15 +88,20 @@
         <div class="col-lg-5">
             <div class="row form">
                 <div class="col-lg-12 i-div">
-
+                    <%
+                        User userData = (User)request.getSession(true).getAttribute("userData");
+                        byte[] b = userData.getPhoto();
+                        byte[] encodeBase64 = org.apache.commons.codec.binary.Base64.encodeBase64(b);
+                        String base64Encoded = new String(encodeBase64, "UTF-8");
+                    %>
                     <div class="row">
+
                         <div class="col-lg-3">
-                            <img class="img-responsive" src="user.png" alt="dummy">
+                            <img class="img-responsive" src="data:image/jpeg;base64,<%=base64Encoded%>" alt="" onerror="this.onerror=null;this.src='resources/images/dummy2.png';">
                         </div>
+
                         <div class="col-lg-9">
                             <ul>
-                                <% User userData = (User)request.getSession(true).getAttribute("userData");
-                                %>
 
                                 <li><span class="name-font"><%= userData.getUsername() %></span></li>
                                 <li class="name-margin"><small>@<%= userData.getFirstname()%></small></li>
@@ -113,7 +123,7 @@
             </div>
         </div>
 
-        <div class="col-lg-7">
+        <div class="col-lg-7" style="left: 20px;">
             <div class="row form">
                 <div class="col-lg-12 i-div">
                     <div class="row">
@@ -174,6 +184,7 @@
         </div>
 
         <% List<Subscription> displaySub = (List)request.getSession(true).getAttribute("displaySub");
+            Integer curUserId = (Integer) request.getSession(true).getAttribute("ID");
         %>
         <div class="col-lg-5 Subscribe-div-head">
             <div class="row form">
@@ -186,44 +197,72 @@
                     <%
                         int i=0;
                         for(Subscription sub:displaySub){
-
-//                        User u = (User)request.getSession(true).getAttribute("userid");
-                        int curUserId=2;
-                        if(sub.getTopic().getUser().getUserid()==sub.getUser().getUserid())
-                        {
-                            if(sub.getUser().getUserid()==curUserId && i<5) {
-                                i++;
+                            if(sub.getTopic().getUser().getUserid()==sub.getUser().getUserid())
+                            {
+                                if(sub.getUser().getUserid()==curUserId && i<5) {
+                                    i++;
+                                    byte[] b1 = sub.getUser().getPhoto();
+                                    byte[] encodeBase641 = org.apache.commons.codec.binary.Base64.encodeBase64(b);
+                                    String base64Encoded1 = new String(encodeBase641, "UTF-8");
                     %>
 
                     <div class="row">
                         <div class="col-lg-3">
-                            <img class="img-responsive" src="user.png" alt="dummy">
+                            <img class="img-responsive" src="data:image/jpeg;base64,<%=base64Encoded1%>"  onerror="this.onerror=null;this.src='resources/images/dummy2.png';">
                         </div>
                         <div class="col-lg-9">
                             <ul>
-                                <li><a href="#" class="anchor">Grails</a></li>
+                                <li><a href="#" class="anchor"><%=sub.getTopic().gettopicname()%></a></li>
 
                             </ul>
                             <table class="Subscribe-table">
                                 <tr class="table-head-row">
-                                    <td>@Uday</td>
+                                    <td><%=sub.getUser().getUsername()%></td>
                                     <td>Subscriptions</td>
                                     <td>Post</td>
                                 </tr>
                                 <tr>
                                     <td><a>Unsubscribe</a></td>
-                                    <td>50</td>
+                                    <td><%=(Long)request.getSession(true).getAttribute("subscription")%></td>
                                     <td>30</td>
                                 </tr>
                             </table>
+                            <%if(sub.getSeriousness()== Seriousness.Serious){%>
+                            <select>
+                                <option selected="true">Serious</option>
+                                <option>VerySerious</option>
+                                <option>Casual</option>
+                            </select>
+                            <%}
+                            else if(sub.getSeriousness()== Seriousness.VerySerious){%>
                             <select>
                                 <option>Serious</option>
+                                <option selected="true">VerySerious</option>
+                                <option>Casual</option>
                             </select>
+                            <%}
+                            else if(sub.getSeriousness()== Seriousness.Casual){%>
                             <select>
-                                <option>Delete</option>
-                                <option>Edit</option>
-                                <option>Private</option>
+                                <option>Serious</option>
+                                <option>VerySerious</option>
+                                <option selected="true">Casual</option>
                             </select>
+                            <%}%>
+
+                            <%if(sub.getTopic().getVisibility()== Visibility.PUBLIC){%>
+                            <select>
+                                <option>Private</option>
+                                <option selected="true">Public</option>
+                            </select>
+                            <%}
+                            else if(sub.getTopic().getVisibility()== Visibility.PRIVATE){%>
+                            <select>
+                                <option selected="true">Private</option>
+                                <option>Public</option>
+                            </select>
+                            <%}%>
+
+
                             <i class="fa fa-envelope-o" aria-hidden="true"></i>
                             <i class="fa fa-file-o" aria-hidden="true"></i>
                             <i class="fa fa-trash" aria-hidden="true"></i>
@@ -232,39 +271,60 @@
                     <hr/>
 
 
-                                <%
+                    <%
 
-                            }
                         }
-                        else{
-                            if(sub.getUser().getUserid()==curUserId) {
-                                %>
+                    }
+                    else{
+                        if(sub.getUser().getUserid()==curUserId) {
+                            byte[] b1 = sub.getUser().getPhoto();
+                            byte[] encodeBase641 = org.apache.commons.codec.binary.Base64.encodeBase64(b);
+                            String base64Encoded1 = new String(encodeBase641, "UTF-8");
+                    %>
 
                     <div class="row">
                         <div class="col-lg-3">
-                            <img class="img-responsive" src="user.png" alt="dummy">
+                            <img class="img-responsive" src="data:image/jpeg;base64,<%=base64Encoded1%>"  onerror="this.onerror=null;this.src='resources/images/dummy2.png';">
                         </div>
                         <div class="col-lg-9">
                             <ul>
-                                <li><a href="#" class="anchor">Grails</a></li>
+                                <li><a href="#" class="anchor"><%=sub.getTopic().gettopicname()%></a></li>
 
                             </ul>
                             <table class="Subscribe-table">
                                 <tr class="table-head-row">
-                                    <td>@Uday</td>
+                                    <td><%=sub.getUser().getUsername()%></td>
                                     <td>Subscriptions</td>
                                     <td>Post</td>
                                 </tr>
                                 <tr>
                                     <td><a>Unsubscribe</a></td>
-                                    <td>50</td>
+                                    <td><%=(Long)request.getSession(true).getAttribute("subscription")%></td>
                                     <td>30</td>
                                 </tr>
                             </table>
                             <div class="Subscribe-div">
+                                <%if(sub.getSeriousness()== Seriousness.Serious){%>
+                                <select>
+                                    <option selected="true">Serious</option>
+                                    <option>VerySerious</option>
+                                    <option>Casual</option>
+                                </select>
+                                <%}
+                                else if(sub.getSeriousness()== Seriousness.VerySerious){%>
                                 <select>
                                     <option>Serious</option>
+                                    <option selected="true">VerySerious</option>
+                                    <option>Casual</option>
                                 </select>
+                                <%}
+                                else if(sub.getSeriousness()== Seriousness.Casual){%>
+                                <select>
+                                    <option>Serious</option>
+                                    <option>VerySerious</option>
+                                    <option selected="true">Casual</option>
+                                </select>
+                                <%}%>
 
                                 <i class="fa fa-envelope-o" aria-hidden="true"></i>
                             </div>
@@ -272,24 +332,12 @@
                         </div>
                     </div>
 
-
-
-
-                                <%
+                    <%
+                                }
                             }
                         }
                     %>
 
-
-
-
-                    <%
-                    }
-                    %>
-
-
-
-
                 </div>
             </div>
 
@@ -297,80 +345,42 @@
 
 
 
-       <%-- <div class="col-lg-5 share-div-head">
-            <div class="row form">
-                <div class="col-lg-12 i-div">
-                    <div class="row">
-                        <div class="col-lg-12 subform">Share Link (Pop up)</div>
-                    </div>
-                    <div class="row">
-
-                        <form class="form-horizontal reg-form">
-
-                            <div class="form-group">
-                                <label class="control-label col-sm-3 font-normal" for="email" style="text-align: left">Link*</label>
-                                <div class="col-sm-8">
-                                    <input class="form-control" type="text" placeholder="Link" />
-                                </div>
-                            </div>
-
-
-                            <div class="form-group">
-                                <label class="control-label col-sm-3 font-normal" for="email" style="text-align: left">Description*</label>
-                                <div class="col-sm-8">
-                                    <textarea  class="form-control" rows="4" placeholder="Description"></textarea>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="control-label col-sm-3 font-normal" for="email" style="text-align: left">Topic*</label>
-                                <div class="col-sm-8">
-                                    <select>
-                                        <option>Topic</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-offset-5 col-lg-8">
-                                <button type="button" class=" btn-xs">Share</button>
-                                <button type="button" class=" btn-xs">Cancel</button>
-                            </div>
-                            <br>
-                            <br>
-                        </form>
-
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
---%>
-
-        <div class="col-lg-5 Subscribe-div-head">
+        <div class="col-lg-5 share-div-head">
             <div class="row form">
                 <div class="col-lg-12 i-div">
                     <div class="row">
                         <div class="col-lg-12 subform">Trending Topics</div>
                     </div>
 
+
+                    <%
+                        for(Subscription sub:displaySub){
+                            if(curUserId!=sub.getUser().getUserid())
+                            {
+
+                                byte[] b1 = sub.getUser().getPhoto();
+                                byte[] encodeBase641 = org.apache.commons.codec.binary.Base64.encodeBase64(b);
+                                String base64Encoded1 = new String(encodeBase641, "UTF-8");
+                    %>
+
                     <div class="row">
                         <div class="col-lg-3">
-                            <img class="img-responsive" src="user.png" alt="dummy">
+                            <img class="img-responsive" src="data:image/jpeg;base64,<%=base64Encoded1%>"  onerror="this.onerror=null;this.src='resources/images/dummy2.png';">
                         </div>
                         <div class="col-lg-9">
                             <ul>
-                                <li><a href="#" class="anchor">Grails</a></li>
+                                <li><a href="#" class="anchor"><%=sub.getTopic().gettopicname()%></a></li>
 
                             </ul>
                             <table class="Subscribe-table">
                                 <tr class="table-head-row">
-                                    <td>@Uday</td>
+                                    <td>@<%=sub.getUser().getUsername()%></td>
                                     <td>Subscriptions</td>
                                     <td>Post</td>
                                 </tr>
                                 <tr>
-                                    <td><a>Subscribe</a></td>
-                                    <td>50</td>
+                                    <td><a href="#">Subscribe</a></td>
+                                    <td><%=(Long)request.getSession(true).getAttribute("subscription")%></td>
                                     <td>30</td>
                                 </tr>
                             </table>
@@ -379,14 +389,23 @@
                         </div>
                     </div>
                     <hr>
+                    <%
+                    }
+                    else{
+                        if(sub.getUser().getUserid()==curUserId) {
+                            byte[] b1 = sub.getUser().getPhoto();
+                            byte[] encodeBase641 = org.apache.commons.codec.binary.Base64.encodeBase64(b);
+                            String base64Encoded1 = new String(encodeBase641, "UTF-8");
+                    %>
+
                     <div class="row">
                         <div class="col-lg-3">
-                            <img class="img-responsive" src="user.png" alt="dummy">
+                            <img class="img-responsive" src="data:image/jpeg;base64,<%=base64Encoded1%>"  onerror="this.onerror=null;this.src='resources/images/dummy2.png';">
                         </div>
                         <div class="col-lg-9">
                             <ul>
                                 <li>
-                                    <input type="text" value="Grails" style="width: 130px" />
+                                    <input type="text" value="<%=sub.getTopic().gettopicname()%>" style="width: 130px" />
                                     <div style="display: inline;">
                                         <button type="button" class=" btn-xs" style="width: 60px">Save</button>
                                         <button type="button" class=" btn-xs" style="width: 60px">Cancel</button>
@@ -396,29 +415,61 @@
                             </ul>
                             <table class="Subscribe-table">
                                 <tr class="table-head-row">
-                                    <td>@Uday</td>
+                                    <td>@<%=sub.getUser().getUsername()%></td>
                                     <td>Subscriptions</td>
                                     <td>Post</td>
                                 </tr>
                                 <tr>
                                     <td><a>Unsubscribe</a></td>
-                                    <td>50</td>
+                                    <td><%=(Long)request.getSession(true).getAttribute("subscription")%></td>
                                     <td>30</td>
                                 </tr>
                             </table>
+                            <%if(sub.getSeriousness()== Seriousness.Serious){%>
+                            <select>
+                                <option selected="true">Serious</option>
+                                <option>VerySerious</option>
+                                <option>Casual</option>
+                            </select>
+                            <%}
+                            else if(sub.getSeriousness()== Seriousness.VerySerious){%>
                             <select>
                                 <option>Serious</option>
+                                <option selected="true">VerySerious</option>
+                                <option>Casual</option>
                             </select>
+                            <%}
+                            else if(sub.getSeriousness()== Seriousness.Casual){%>
                             <select>
-                                <option>Delete</option>
-                                <option>Edit</option>
-                                <option>Private</option>
+                                <option>Serious</option>
+                                <option>VerySerious</option>
+                                <option selected="true">Casual</option>
                             </select>
+                            <%}%>
+                            <%if(sub.getTopic().getVisibility()== Visibility.PUBLIC){%>
+                            <select>
+                                <option>Private</option>
+                                <option selected="true">Public</option>
+                            </select>
+                            <%}
+                            else if(sub.getTopic().getVisibility()== Visibility.PRIVATE){%>
+                            <select>
+                                <option selected="true">Private</option>
+                                <option>Public</option>
+                            </select>
+                            <%}%>
                             <i class="fa fa-envelope-o" aria-hidden="true"></i>
                             <i class="fa fa-file-o" aria-hidden="true"></i>
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </div>
                     </div>
+                    <hr>
+
+                    <%
+                                }
+                            }
+                        }
+                    %>
                     <br>
 
                 </div>
@@ -443,7 +494,7 @@
                             <div class="form-group">
                                 <label class="sr-only">Link</label>
                                 <input class="form-control" type="text" placeholder="Link" id="link" />
-                           </div>
+                            </div>
 
                             <div class="form-group">
                                 <label class="control-label col-sm-3 font-normal" for="email" style="text-align: left" >Description*</label>
@@ -461,8 +512,8 @@
 
                             </div>
                             <div class="form-group">
-                                <input type="button" name="Share" id="shareLinkBtn" class="btn btn-primary"/>
-                                <input type="button" name="Cancel" id="cancelLinkBtn" data-dismiss="modal" class="btn btn-primary"/>
+                                <input type="button" name="Share" value="Share" id="shareLinkBtn" class="btn btn-primary"/>
+                                <input type="button" name="Cancel" value="Cancel" id="cancelLinkBtn" data-dismiss="modal" class="btn btn-primary"/>
                             </div>
                         </form>
                     </div>
@@ -491,7 +542,7 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-3 font-normal" for="email" style="text-align: left">Description*</label>
 
-                                    <textarea  class="form-control" rows="4" placeholder="Description" id="description"></textarea>
+                                <textarea  class="form-control" rows="4" placeholder="Description" id="description"></textarea>
 
                             </div>
 
@@ -504,60 +555,15 @@
 
                             </div>
                             <div class="form-group">
-                                <input type="submit" name="Share" id="shareDocumentBtn" class="btn btn-primary"/>
-                                <input type="submit" name="Cancel" id="cancel1" data-dismiss="modal" class="btn btn-primary"/>
+                                <input type="button" name="Share" value="Share" id="shareDocumentBtn" class="btn btn-primary"/>
+                                <input type="button" name="Cancel" id="cancel1" value="Cancel" data-dismiss="modal" class="btn btn-primary"/>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-  <%--      <div class="col-lg-5 ">
-            <div class="row form">
-                <div class="col-lg-12 i-div">
-                    <div class="row">
-                        <div class="col-lg-12 subform">Share Document (Pop up)</div>
-                    </div>
-                    <div class="row">
 
-                        <form class="form-horizontal reg-form">
-
-                            <div class="form-group">
-                                <label class="control-label col-sm-3 font-normal" for="email" style="text-align: left">Document*</label>
-                                <div class="col-sm-8">
-                                    <input class="form-control" type="text" placeholder="Link" />
-                                </div>
-                            </div>
-
-
-                            <div class="form-group">
-                                <label class="control-label col-sm-3 font-normal" for="email" style="text-align: left">Description*</label>
-                                <div class="col-sm-8">
-                                    <textarea  class="form-control" rows="4" placeholder="Description"></textarea>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="control-label col-sm-3 font-normal" for="email" style="text-align: left">Topic*</label>
-                                <div class="col-sm-8">
-                                    <select>
-                                        <option>Topic</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-offset-5 col-lg-8">
-                                <button type="button" class=" btn-xs">Share</button>
-                                <button type="button" class=" btn-xs">Cancel</button>
-                            </div>
-                            <br>
-                            <br>
-                        </form>
-
-
-                    </div>
-                </div>
-            </div>
-        </div>--%>
 
         <%--Send Invitation Modal--%>
 
@@ -573,25 +579,25 @@
 
                     <div class="modal-body">
                         <form >
-                        <div class="form-group">
-                            <label class="sr-only">Name</label>
-                            <input class="form-control" type="email" placeholder="Email" id="email" />    </div>
+                            <div class="form-group">
+                                <label class="sr-only">Name</label>
+                                <input class="form-control" type="email" placeholder="Email" id="email" />    </div>
 
                             <div class="form-group">
                                 <select name='topic' id="topic">
                                     <c:forEach items="${topicname}" var="topicname">
-                                            <option value="${topicname}">${topicname}</option>
-                                      </c:forEach>
+                                        <option value="${topicname}">${topicname}</option>
+                                    </c:forEach>
                                 </select>
 
                             </div>
                             <div class="form-group">
-                                <input type="submit" name="Send Invite" id="invite" class="btn btn-primary"/>
-                                <input type="submit" name="Cancel" id="cancel" data-dismiss="modal" class="btn btn-primary"/>
+                                <input type="button" value="Send Invite" name="Send Invite" id="invite" class="btn btn-primary"/>
+                                <input type="button" name="Cancel" value="Cancel" id="cancel" data-dismiss="modal" class="btn btn-primary"/>
                             </div>
                         </form>
                     </div>
-              </div>
+                </div>
             </div>
         </div>
 
@@ -609,22 +615,23 @@
 
                     <div class="modal-body">
                         <form >
-                        <div class="form-group">
-                            <label class="sr-only">Name</label>
-                            <input class="form-control" type="text" placeholder="Name" id="name" name="name" />
-                        </div>
-                         <div class="form-group">
-                            <select name="visibility" id="visibility">
-                                <option value="PUBLIC">Public</option>
-                                <option value="PRIVATE">Private</option>
-                            </select>
-                        </div>
-                       <div class="form-group">
-                            <input type="button" name="insert" id="insert" class="btn btn-primary"/>
-                        </div>
+                            <div class="form-group">
+                                <label class="sr-only">Name</label>
+                                <input class="form-control" type="text" placeholder="Name" id="name" name="name" />
+                            </div>
+                            <div class="form-group">
+                                <select name="visibility" id="visibility">
+                                    <option value="PUBLIC">Public</option>
+                                    <option value="PRIVATE">Private</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="button" name="insert" id="insert" value="Add" class="btn btn-primary"/>
+                                <input type="button" name="insert"  value="Cancel" data-dismiss="modal" class="btn btn-primary"/>
+                            </div>
                         </form>
                     </div>
-              </div>
+                </div>
             </div>
         </div>
 
@@ -646,27 +653,27 @@
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
 
 <script>
-/*
-    $(document).ready(function(){
-        $("#insert").click(function(e){
-            var id=$(this).attr('id')
-            var name = $('#name').val();
-            var visibility=$('#visibility').val();
-            $.post("/topic",
-                {
-                    name: name,
-                    visibility: visibility
-                },
-                function(data){
-                    alert('added');
-                    var obj = JSON.parse(data);
-                    alert("Data: " + obj.res );
-                    location.reload();
-                });
-        });
-    });
+    /*
+     $(document).ready(function(){
+     $("#insert").click(function(e){
+     var id=$(this).attr('id')
+     var name = $('#name').val();
+     var visibility=$('#visibility').val();
+     $.post("/topic",
+     {
+     name: name,
+     visibility: visibility
+     },
+     function(data){
+     alert('added');
+     var obj = JSON.parse(data);
+     alert("Data: " + obj.res );
+     location.reload();
+     });
+     });
+     });
 
-*/
+     */
 
 
 </script>

@@ -1,7 +1,9 @@
 package controller;
 
+import beans.Subscription;
 import beans.Topic;
 import beans.User;
+import dao.UserImplement;
 import org.springframework.web.multipart.MultipartFile;
 import services.TopicService;
 import beans.Visibility;
@@ -19,6 +21,7 @@ import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by Prashant on 16-Jul-17.
@@ -32,6 +35,8 @@ public class dashboardController {
     @Autowired
     TopicImplement topicImplement;
 
+    @Autowired
+    UserImplement userImplement;
    /* @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public String dashboard(HttpServletRequest request, HttpSession session) {
         session  = request.getSession(false);
@@ -78,22 +83,30 @@ public class dashboardController {
  }
 
         @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
-    public ModelAndView dashboard(HttpServletRequest request, HttpSession session) {
+    public String dashboard(HttpServletRequest request, HttpSession session) {
         session  = request.getSession(false);
-            ModelAndView modal=new ModelAndView();
-             modal.setViewName("/");
-            System.out.println(session.getAttribute("user"));
             if(session.getAttribute("user")!=null)
             {
                 User user=(User)session.getAttribute("userId");
-                modal.setViewName("dashboard");
-                modal.addObject("topicname",topicImplement.displayTopicDropDown(user.getUserid()));
-                modal.addObject("user",user.getUsername());
-                modal.addObject("firstName",user.getFirstname());
 
+                User userData=userImplement .getUserData(user.getUsername());
+                long sub= userImplement.countSubscription(user);
+                long topic= userImplement.countTopic(user);
+                List<Subscription> displaySub = userImplement.subscriptionDisplay(user);
+                request.getSession(true).setAttribute("userData",userData);
+                request.getSession(true).setAttribute("subscription",sub);
+                request.getSession(true).setAttribute("topics",topic);
+                request.getSession(true).setAttribute("ID",user.getUserid());
+                request.getSession(true).setAttribute("displaySub",displaySub);
+                request.setAttribute("topicname",topicImplement.displayTopicDropDown(user.getUserid()));
+                request.setAttribute("user",user.getUsername());
+                request.setAttribute("firstName",user.getFirstname());
+                return ("dashboard");
             }
-        return modal;
-    }
+            else
+            return ("redirect:/");
+
+        }
 
     @RequestMapping(value = "/document", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
@@ -140,6 +153,8 @@ public class dashboardController {
         topicImplement.addLink(link,descriptionLink,topicid,userid);
         return "success";
     }
+
+
 }
 
 

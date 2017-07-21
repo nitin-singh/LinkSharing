@@ -47,7 +47,9 @@
              --><value>beans.User</value>
                 <value>beans.Topic</value>
                 <value>beans.LinkResource</value>
+                <value>beans.ReadingItem</value>
 
+                <value>beans.ResourceRating</value>
                <!-- <value>beans.Resource</value>
                --> <value>beans.DocumentResource</value>
                 <value>beans.Subscription</value>
