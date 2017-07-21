@@ -1,0 +1,114 @@
+.head{
+    height: 48px;
+    border: solid 2px;
+    border-radius: 10px;
+}
+.fileBox{
+    width: 125px;
+}
+.cross{
+    float: right;
+    padding-top: 3px;
+}
+
+input[type="file"]{
+    color: transparent;    /* Hides your "No File Selected" */
+    direction: rtl;        /* Sets the Control to Right-To-Left */
+}
+.col1{
+    margin-top: 20px;
+}
+.font-normal{
+    font-weight: normal;
+}
+.form{
+    border: solid 2px;
+    margin-right: 55px;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+}
+.subform{
+    border-bottom: solid 1px;
+    margin-bottom: 10px;
+    background-color: darkgray;
+}
+.form{
+
+    border: solid 1px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+.reg-form{
+    padding: 12px
+}
+ul {
+    list-style-type: none;
+}
+a{
+    float: right;
+}
+
+.row2{
+    margin-top: 25px;
+    padding: 15px;
+
+}
+.row3{
+    margin-top: 12px;
+    padding: 15px;
+
+}
+
+.formRight{
+    border: solid 1px;
+
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+}
+.label1{
+    margin-top:10px;
+}
+
+.text{
+    margin-top:10px;
+}
+
+button{
+    float: right;
+    border-radius: 10px;
+    border: solid 1px;
+    border-color:black;
+    width: 83px;
+}
+
+img{
+    margin-top: 10px
+}
+
+small{
+    color: silver;
+}
+.logo{
+    height: 34px;
+    width: 100px;
+}
+.search_border{
+    border:0;
+}
+
+.search{
+    border: solid 1px;
+    border-radius: 12px;
+    margin-top: 10px;
+
+    padding-right: 5px;
+
+}
+.drop_button{
+    height: 20px;
+    border-radius: 10px;
+}
+
+.heading{
+    line-height: 20px;
+}
